@@ -257,7 +257,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/google-gadgets
 %{_datadir}/google-gadgets/*.gg
 %{_datadir}/mime/packages/google-gadgets.xml
-%{_desktopdir}/ggl-designer.desktop
 %{_iconsdir}/*/*/*/*.png
 %{_pixmapsdir}/google-gadgets.png
 
@@ -341,6 +340,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/google-gadgets/modules/gtk-flash-element.so
 %attr(755,root,root) %{_libdir}/google-gadgets/modules/gtk-system-framework.so
 %{_desktopdir}/ggl-gtk.desktop
+%{_desktopdir}/ggl-designer.desktop
 
 %files qt
 %defattr(644,root,root,755)
