@@ -14,7 +14,7 @@
 Summary:	Google Gadgets for Linux
 Name:		google-gadgets
 Version:	0.10.4
-Release:	1.9
+Release:	2
 License:	Apache License v2.0
 Group:		X11/Applications
 Source0:	http://google-gadgets-for-linux.googlecode.com/files/%{name}-for-linux-%{version}.tar.bz2
