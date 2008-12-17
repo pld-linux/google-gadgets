@@ -9,20 +9,21 @@
 # TODO:
 # - smjs - spidermonkey js runtime (default) is broken with cmake build. revert or fix cmake build!
 #   besides, qtjs seems not broken, at least for google calendar widget
+# - cmake build doesn't install *.la to %{_libdir}
 # - add gtk BRs
-Summary:	google-gadgets-for-linux
-Name:		google-gadgets-for-linux
+Summary:	Google Gadgets for Linux
+Name:		google-gadgets
 Version:	0.10.4
-Release:	1.1
+Release:	1.9
 License:	Apache License v2.0
 Group:		X11/Applications
-Source0:	http://google-gadgets-for-linux.googlecode.com/files/%{name}-%{version}.tar.bz2
+Source0:	http://google-gadgets-for-linux.googlecode.com/files/%{name}-for-linux-%{version}.tar.bz2
 # Source0-md5:	0ef0a62e0a575388084a77759b646718
-Source1:	%{name}-gtk.desktop
-Source2:	%{name}-qt.desktop
-Patch0:		%{name}-cmake.patch
-Patch1:		%{name}-link_with_qtnetwork.patch
-Patch2:		%{name}-js.patch
+Source1:	%{name}-for-linux-gtk.desktop
+Source2:	%{name}-for-linux-qt.desktop
+Patch0:		%{name}-for-linux-cmake.patch
+Patch1:		%{name}-for-linux-link_with_qtnetwork.patch
+Patch2:		%{name}-for-linux-js.patch
 URL:		http://code.google.com/p/google-gadgets-for-linux/
 %if %{with qt}
 BuildRequires:	QtCore-devel >= 4.4.3
@@ -30,6 +31,12 @@ BuildRequires:	QtNetwork-devel >= 4.4.3
 BuildRequires:	QtScript-devel >= 4.4.3
 BuildRequires:	QtWebKit-devel >= 4.4.3
 %endif
+%if %{with gtk}
+BuildRequires:	cairo-devel >= 1.2.0
+BuildRequires:	gtk+2-devel >= 2:2.10.0
+BuildRequires:	startup-notification-devel
+%endif
+BuildRequires:	NetworkManager-devel >= 0.6.5
 BuildRequires:	cmake >= 2.6.1-2
 BuildRequires:	curl-devel >= 7.18.2
 BuildRequires:	dbus-devel >= 1.0.2
@@ -37,11 +44,15 @@ BuildRequires:	flex
 BuildRequires:	gstreamer-plugins-base-devel >= 0.10.0
 BuildRequires:	libltdl-devel
 BuildRequires:	librsvg-devel
-BuildRequires:	libtool >= 1.5.22
-BuildRequires:	libxml2-devel >= 2.4.0
+BuildRequires:	libtool >= 2:1.5.22
+BuildRequires:	libxml2-devel >= 1:2.4.0
 BuildRequires:	pkgconfig
 BuildRequires:	xulrunner-devel >= 1.8
 BuildRequires:	zip
+BuildRequires:	zlib-devel >= 1.2.0
+Requires:	libggadget = %{version}-%{release}
+Provides:	google-gadgets-for-linux-gadgets = %{version}
+Obsoletes:	google-gadgets-for-linux-gadgets
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -50,51 +61,141 @@ gadgets under Linux, catering to the unique needs of Linux users. It's
 compatible with the gadgets written for Google Desktop for Windows as
 well as the Universal Gadgets on iGoogle.
 
-%package gadgets
-Summary:	google-gadgets set
-Summary(pl.UTF-8):	Zestaw gadżetów google-gadgets
-Group:		X11/Applications
-Requires:	%{name} = %{version}-%{release}
+%package -n libggadget
+Summary:	Google Gadgets main libraries
+Group:		Libraries
+Requires:	dbus >= 1.0.21G
+Requires:	libltdl
+Obsoletes:	google-gadgets-for-linux
 
-%description gadgets
-Google-gadgets set.
+%description -n libggadget
+This package contains the main Google Gadgets libraries, it is
+required by both the GTK+ and QT versions of Google Gadgets.
 
-%description gadgets -l pl.UTF-8
-Zestaw gadżetów google-gadgets.
-
-%package devel
-Summary:	Header files for google-gadgets library
-Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki google-gadgets
+%package -n libggadget-devel
+Summary:	Google Gadgets main development files
 Group:		Development/Libraries
-Requires:	%{name} = %{version}-%{release}
+Requires:	dbus-devel >= 1.0.2
+Requires:	libggadget = %{version}-%{release}
 
-%description devel
+%description -n libggadget-devel
 This package contains the development files assoicated with
 libggadget, it is needed to write programs that utilise libggadget.
 
-%description devel -l pl.UTF-8
+%description -n libggadget-devel -l pl.UTF-8
 Pliki nagłówkowe biblioteki google-gadgets.
 
-%package qt
-Summary:	Qt Runtime Environment
-Group:		X11/Applications
-Requires:	%{name} = %{version}-%{release}
+%package -n libggadget-gtk
+Summary:	Google Gadgets GTK+ library
+Group:		Libraries
+Requires:	cairo >= 1.2.0
+Requires:	gtk+2 >= 2:2.10.0
+Requires:	libggadget = %{version}-%{release}
+Requires:	librsvg >= 1:2.18.0
 
-%description qt
-This package contains the QT Google Gadgets library, it is required to
-run the QT version of Google Gadgets.
-
-%package gtk
-Summary:	GTK Runtime Environment
-Group:		X11/Applications
-Requires:	%{name} = %{version}-%{release}
-
-%description gtk
+%description -n libggadget-gtk
 This package contains the GTK+ Google Gadgets library, it is required
 to run the GTK+ version of Google Gadgets.
 
+%package -n libggadget-gtk-devel
+Summary:	Google Gadgets GTK+ development files
+Group:		Development/Libraries
+Requires:	cairo-devel >= 1.2.0
+Requires:	gtk+2-devel >= 2:2.10.0
+Requires:	libggadget-devel = %{version}-%{release}
+Requires:	libggadget-gtk = %{version}-%{release}
+Requires:	librsvg-devel >= 1:2.18.0
+
+%description -n libggadget-gtk-devel
+This package contains the development files assoicated with
+libggadget-gtk, it is needed to write GTK+ programs that utilise
+libggadget.
+
+%package -n libggadget-qt
+Summary:	Google Gadgets QT library
+Group:		Libraries
+Requires:	QtWebKit >= 4.4.0
+Requires:	libggadget = %{version}-%{release}
+
+%description -n libggadget-qt
+This package contains the QT Google Gadgets library, it is required to
+run the QT version of Google Gadgets.
+
+%package -n libggadget-qt-devel
+Summary:	Google Gadgets QT development files
+Group:		Development/Libraries
+Requires:	QtWebKit-devel >= 4.4.0
+Requires:	libggadget-devel = %{version}-%{release}
+Requires:	libggadget-qt = %{version}-%{release}
+
+%description -n libggadget-qt-devel
+This package contains the development files assoicated with
+libggadget-qt, it is needed to write QT programs that utilise
+libggadget.
+
+%package gtk
+Summary:	GTK+ Version of Google Gadgets
+Group:		X11/Applications
+Requires:	google-gadgets = %{version}-%{release}
+Requires:	google-gadgets-gst = %{version}-%{release}
+Requires:	google-gadgets-xul = %{version}-%{release}
+Requires:	libggadget-gtk = %{version}-%{release}
+Obsoletes:	google-gadgets-for-linux-gtk
+
+%description gtk
+Google Gadgets for Linux provides a platform for running desktop
+gadgets under Linux, catering to the unique needs of Linux users. It's
+compatible with the gadgets written for Google Desktop for Windows as
+well as the Universal Gadgets on iGoogle.
+
+This package includes the GTK+ version.
+
+%package qt
+Summary:	QT Version of Google Gadgets
+Group:		X11/Applications
+Requires:	google-gadgets = %{version}-%{release}
+Requires:	google-gadgets-gst = %{version}
+Requires:	libggadget-qt = %{version}-%{release}
+Obsoletes:	google-gadgets-for-linux-qt
+
+%description qt
+Google Gadgets for Linux provides a platform for running desktop
+gadgets under Linux, catering to the unique needs of Linux users. It's
+compatible with the gadgets written for Google Desktop for Windows as
+well as the Universal Gadgets on iGoogle.
+
+This package includes the QT version.
+
+%package gst
+Summary:	GStreamer modules for Google Gadgets
+Group:		X11/Applications
+Requires:	gstreamer-plugins-base >= 0.10.6
+Requires:	libggadget = %{version}-%{release}
+
+%description gst
+Google Gadgets for Linux provides a platform for running desktop
+gadgets under Linux, catering to the unique needs of Linux users. It's
+compatible with the gadgets written for Google Desktop for Windows as
+well as the Universal Gadgets on iGoogle.
+
+This package includes the GStreamer modules.
+
+%package xul
+Summary:	XULRunner modules for Google Gadgets
+Group:		X11/Applications
+Requires:	libggadget = %{version}-%{release}
+Requires:	xulrunner
+
+%description xul
+Google Gadgets for Linux provides a platform for running desktop
+gadgets under Linux, catering to the unique needs of Linux users. It's
+compatible with the gadgets written for Google Desktop for Windows as
+well as the Universal Gadgets on iGoogle.
+
+This package includes the XULRunner modules.
+
 %prep
-%setup -q
+%setup -q -n %{name}-for-linux-%{version}
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -105,7 +206,7 @@ cd build
 %cmake \
 	-DCMAKE_INSTALL_PREFIX=%{_prefix} \
 	-DSYSCONF_INSTALL_DIR=%{_sysconfdir} \
-	-DGTKMOZEMBED_CFLAGS="-I$EMBED_INCDIR/js -I$EMBED_INCDIR/string" \
+	-DGTKMOZEMBED_CFLAGS='-I$EMBED_INCDIR/js -I$EMBED_INCDIR/string' \
 %if "%{_lib}" == "lib64"
 	-DLIB_SUFFIX=64 \
 %endif
@@ -131,10 +232,36 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/google-gadgets/modules/*.la
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post   -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
+%post -n libggadget -p /sbin/ldconfig
+%postun -n libggadget -p /sbin/ldconfig
+
+%post -n libggadget-gtk -p /sbin/ldconfig
+%postun -n libggadget-gtk -p /sbin/ldconfig
+
+%post -n libggadget-qt -p /sbin/ldconfig
+%postun -n libggadget-qt -p /sbin/ldconfig
 
 %files
+%defattr(644,root,root,755)
+%doc AUTHORS README NEWS
+%dir %{_libdir}/google-gadgets
+%dir %{_libdir}/google-gadgets/modules
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/analytics-usage-collector.so
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/curl-xml-http-request.so
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/dbus-script-class.so
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/default-framework.so
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/default-options.so
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/google-gadget-manager.so
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/libxml2-xml-parser.so
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/linux-system-framework.so
+%dir %{_datadir}/google-gadgets
+%{_datadir}/google-gadgets/*.gg
+%{_datadir}/mime/packages/google-gadgets.xml
+%{_desktopdir}/ggl-designer.desktop
+%{_iconsdir}/*/*/*/*.png
+%{_pixmapsdir}/google-gadgets.png
+
+%files -n libggadget
 %defattr(644,root,root,755)
 %attr(755,root,root) %ghost %{_libdir}/libggadget-1.0.so.0
 %attr(755,root,root) %{_libdir}/libggadget-1.0.so.*.*.*
@@ -146,72 +273,92 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libggadget-npapi-1.0.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libggadget-xdg-1.0.so.0
 %attr(755,root,root) %{_libdir}/libggadget-xdg-1.0.so.*.*.*
-%attr(755,root,root) %{_libdir}/google-gadgets/gtkmoz-browser-child
-%dir %{_libdir}/google-gadgets
-%dir %{_libdir}/google-gadgets/modules
-%dir %{_datadir}/google-gadgets
-%{_datadir}/google-gadgets/*.gg
-%{_datadir}/mime/packages/google-gadgets.xml
-%{_desktopdir}/ggl-designer.desktop
-%{_iconsdir}/*/*/*/*.png
-%{_pixmapsdir}/google-gadgets.png
 
-%files qt
+%files -n libggadget-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/ggl-qt
+%dir %{_includedir}/google-gadgets
+%dir %{_includedir}/google-gadgets/ggadget
+%dir %{_includedir}/google-gadgets/ggadget/dbus
+%dir %{_includedir}/google-gadgets/ggadget/js
+%dir %{_includedir}/google-gadgets/ggadget/xdg
+%dir %{_includedir}/google-gadgets/ggadget/npapi
+%{_includedir}/google-gadgets/ggadget/*.h
+%{_includedir}/google-gadgets/ggadget/dbus/*.h
+%{_includedir}/google-gadgets/ggadget/js/*.h
+%{_includedir}/google-gadgets/ggadget/xdg/*.h
+%{_includedir}/google-gadgets/ggadget/npapi/*.h
+%dir %{_libdir}/google-gadgets/include
+%dir %{_libdir}/google-gadgets/include/ggadget
+%{_libdir}/google-gadgets/include/ggadget/sysdeps.h
+%{_libdir}/libggadget-1.0*.so
+%{_libdir}/libggadget-dbus-1.0*.so
+%{_libdir}/libggadget-js-1.0*.so
+%{_libdir}/libggadget-xdg-1.0*.so
+%{_libdir}/libggadget-npapi-1.0*.so
+%if 0
+%{_libdir}/libggadget-1.0*.la
+%{_libdir}/libggadget-dbus-1.0*.la
+%{_libdir}/libggadget-js-1.0*.la
+%{_libdir}/libggadget-xdg-1.0*.la
+%{_libdir}/libggadget-npapi-1.0*.la
+%endif
+%{_pkgconfigdir}/libggadget-1.0.pc
+%{_pkgconfigdir}/libggadget-dbus-1.0.pc
+%{_pkgconfigdir}/libggadget-js-1.0.pc
+%{_pkgconfigdir}/libggadget-xdg-1.0.pc
+%{_pkgconfigdir}/libggadget-npapi-1.0.pc
+
+%files -n libggadget-gtk
+%defattr(644,root,root,755)
+%attr(755,root,root) %ghost %{_libdir}/libggadget-gtk-1.0.so.0
+%attr(755,root,root) %{_libdir}/libggadget-gtk-1.0.so.*.*.*
+
+%files -n libggadget-gtk-devel
+%defattr(644,root,root,755)
+%dir %{_includedir}/google-gadgets/ggadget/gtk
+%{_includedir}/google-gadgets/ggadget/gtk/*.h
+%{_libdir}/libggadget-gtk-1.0*.so
+#%{_libdir}/libggadget-gtk-1.0*.la
+%{_pkgconfigdir}/libggadget-gtk-1.0.pc
+
+%files -n libggadget-qt
+%defattr(644,root,root,755)
 %attr(755,root,root) %ghost %{_libdir}/libggadget-qt-1.0.so.0
 %attr(755,root,root) %{_libdir}/libggadget-qt-1.0.so.*.*.*
-%{_libdir}/google-gadgets/modules/qt-edit-element.so
-%{_libdir}/google-gadgets/modules/qt-script-runtime.so
-%{_libdir}/google-gadgets/modules/qt-system-framework.so
-%{_libdir}/google-gadgets/modules/qt-xml-http-request.so
-%{_libdir}/google-gadgets/modules/qtwebkit-browser-element.so
-%{_desktopdir}/ggl-qt.desktop
+
+%files -n libggadget-qt-devel
+%defattr(644,root,root,755)
+%dir %{_includedir}/google-gadgets/ggadget/qt
+%{_includedir}/google-gadgets/ggadget/qt/*.h
+%{_libdir}/libggadget-qt-1.0*.so
+#%{_libdir}/libggadget-qt-1.0*.la
+%{_pkgconfigdir}/libggadget-qt-1.0.pc
 
 %files gtk
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/ggl-gtk
-%attr(755,root,root) %ghost %{_libdir}/libggadget-gtk-1.0.so.0
-%attr(755,root,root) %{_libdir}/libggadget-gtk-1.0.so.*.*.*
-%{_libdir}/google-gadgets/modules/gtk-edit-element.so
-%{_libdir}/google-gadgets/modules/gtk-flash-element.so
-%{_libdir}/google-gadgets/modules/gtk-system-framework.so
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/gtk-edit-element.so
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/gtk-flash-element.so
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/gtk-system-framework.so
 %{_desktopdir}/ggl-gtk.desktop
 
-%files gadgets
+%files qt
 %defattr(644,root,root,755)
-%{_libdir}/google-gadgets/modules/analytics-usage-collector.so
-%{_libdir}/google-gadgets/modules/curl-xml-http-request.so
-%{_libdir}/google-gadgets/modules/dbus-script-class.so
-%{_libdir}/google-gadgets/modules/default-framework.so
-%{_libdir}/google-gadgets/modules/default-options.so
-%{_libdir}/google-gadgets/modules/google-gadget-manager.so
-%{_libdir}/google-gadgets/modules/gst-audio-framework.so
-%{_libdir}/google-gadgets/modules/gst-video-element.so
-%{_libdir}/google-gadgets/modules/gtkmoz-browser-element.so
-%{_libdir}/google-gadgets/modules/libxml2-xml-parser.so
-%{_libdir}/google-gadgets/modules/linux-system-framework.so
-%{_libdir}/google-gadgets/modules/smjs-script-runtime.so
+%attr(755,root,root) %{_bindir}/ggl-qt
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/qt-edit-element.so
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/qt-script-runtime.so
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/qt-system-framework.so
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/qt-xml-http-request.so
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/qtwebkit-browser-element.so
+%{_desktopdir}/ggl-qt.desktop
 
-%files devel
+%files gst
 %defattr(644,root,root,755)
-%dir %{_libdir}/google-gadgets/include
-%dir %{_libdir}/google-gadgets/include/ggadget
-%{_libdir}/google-gadgets/include/ggadget/*.h
-%dir %{_includedir}/google-gadgets
-%dir %{_includedir}/google-gadgets/ggadget
-%{_includedir}/google-gadgets/ggadget/*.h
-%dir %{_includedir}/google-gadgets/ggadget/dbus
-%{_includedir}/google-gadgets/ggadget/dbus/*.h
-%dir %{_includedir}/google-gadgets/ggadget/gtk
-%{_includedir}/google-gadgets/ggadget/gtk/*.h
-%dir %{_includedir}/google-gadgets/ggadget/npapi
-%{_includedir}/google-gadgets/ggadget/npapi/*.h
-%dir %{_includedir}/google-gadgets/ggadget/qt
-%{_includedir}/google-gadgets/ggadget/qt/*.h
-%dir %{_includedir}/google-gadgets/ggadget/js
-%{_includedir}/google-gadgets/ggadget/js/*.h
-%dir %{_includedir}/google-gadgets/ggadget/xdg
-%{_includedir}/google-gadgets/ggadget/xdg/*.h
-%attr(755,root,root) %{_libdir}/*.so
-%{_pkgconfigdir}/*.pc
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/gst-audio-framework.so
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/gst-video-element.so
+
+%files xul
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/smjs-script-runtime.so
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/gtkmoz-browser-element.so
+%attr(755,root,root) %{_libdir}/google-gadgets/gtkmoz-browser-child
