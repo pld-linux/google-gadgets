@@ -6,11 +6,6 @@
 
 # use this to get latest rev:
 # svn export http://google-gadgets-for-linux.googlecode.com/svn/trunk/ google-gadgets-for-linux
-# TODO:
-# - smjs - spidermonkey js runtime (default) is broken with cmake build. revert or fix cmake build!
-#   besides, qtjs seems not broken, at least for google calendar widget
-# - cmake build doesn't install *.la to %{_libdir}
-# - add gtk BRs
 Summary:	Google Gadgets for Linux
 Name:		google-gadgets
 Version:	0.10.4
