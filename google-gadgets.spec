@@ -14,7 +14,7 @@
 Summary:	Google Gadgets for Linux
 Name:		google-gadgets
 Version:	0.10.4
-Release:	2
+Release:	3
 License:	Apache License v2.0
 Group:		X11/Applications
 Source0:	http://google-gadgets-for-linux.googlecode.com/files/%{name}-for-linux-%{version}.tar.bz2
@@ -31,13 +31,15 @@ BuildRequires:	QtNetwork-devel >= 4.4.3
 BuildRequires:	QtScript-devel >= 4.4.3
 BuildRequires:	QtWebKit-devel >= 4.4.3
 %endif
+BuildRequires:	autoconf
+BuildRequires:	automake
 %if %{with gtk}
 BuildRequires:	cairo-devel >= 1.2.0
 BuildRequires:	gtk+2-devel >= 2:2.10.0
 BuildRequires:	startup-notification-devel
 %endif
 BuildRequires:	NetworkManager-devel >= 0.6.5
-BuildRequires:	cmake >= 2.6.1-2
+#BuildRequires:	cmake >= 2.6.1-2
 BuildRequires:	curl-devel >= 7.18.2
 BuildRequires:	dbus-devel >= 1.0.2
 BuildRequires:	flex
@@ -201,16 +203,18 @@ This package includes the XULRunner modules.
 %patch2 -p1
 
 %build
-install -d build
-cd build
-%cmake \
-	-DCMAKE_INSTALL_PREFIX=%{_prefix} \
-	-DSYSCONF_INSTALL_DIR=%{_sysconfdir} \
-	-DGTKMOZEMBED_CFLAGS='-I$EMBED_INCDIR/js -I$EMBED_INCDIR/string' \
-%if "%{_lib}" == "lib64"
-	-DLIB_SUFFIX=64 \
-%endif
-	../
+install -d libltdl
+%{__libtoolize}
+%{__aclocal} -I autotools
+%{__autoconf}
+%{__autoheader}
+%{__automake}
+%configure \
+	--disable-ltdl-install \
+	--disable-static \
+	--disable-werror \
+	--with-oem-brand=pld-linux \
+	--with-browser-plugins-dir=%{_libdir}/browser-plugins
 
 %{__make}
 
@@ -218,7 +222,7 @@ cd build
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir}}
 
-%{__make} -C build install \
+%{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 # desync with cmake/ac makefiles
