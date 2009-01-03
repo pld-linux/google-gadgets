@@ -4,16 +4,19 @@
 %bcond_without	qt	# without qt support
 %bcond_without	gadgets	# without gadgets
 
+%define 	rev	r1074
+%define 	rel	1
+
 # use this to get latest rev:
 # svn export http://google-gadgets-for-linux.googlecode.com/svn/trunk/ google-gadgets-for-linux
 Summary:	Google Gadgets for Linux
 Name:		google-gadgets
-Version:	0.10.4
-Release:	3
+Version:	0.10.5
+Release:	0.%{rev}.%{rel}
 License:	Apache License v2.0
 Group:		X11/Applications
-Source0:	http://google-gadgets-for-linux.googlecode.com/files/%{name}-for-linux-%{version}.tar.bz2
-# Source0-md5:	0ef0a62e0a575388084a77759b646718
+Source0:	%{name}-for-linux-%{version}-%{rev}.tar.bz2
+# Source0-md5:	8f8fd6f7173fd26bf29fffafab9b0121
 Source1:	%{name}-for-linux-gtk.desktop
 Source2:	%{name}-for-linux-qt.desktop
 Patch0:		%{name}-for-linux-cmake.patch
@@ -192,7 +195,7 @@ well as the Universal Gadgets on iGoogle.
 This package includes the XULRunner modules.
 
 %prep
-%setup -q -n %{name}-for-linux-%{version}
+%setup -q -n %{name}-for-linux
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
