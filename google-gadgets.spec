@@ -4,7 +4,7 @@
 %bcond_without	qt	# without qt support
 %bcond_without	gadgets	# without gadgets
 
-%define 	rev	r1074
+%define 	rev	r1084
 %define 	rel	1
 
 # use this to get latest rev:
@@ -16,7 +16,7 @@ Release:	0.%{rev}.%{rel}
 License:	Apache License v2.0
 Group:		X11/Applications
 Source0:	%{name}-for-linux-%{version}-%{rev}.tar.bz2
-# Source0-md5:	8f8fd6f7173fd26bf29fffafab9b0121
+# Source0-md5:	885388f7f00e6ef8777194e2db4213bc
 Source1:	%{name}-for-linux-gtk.desktop
 Source2:	%{name}-for-linux-qt.desktop
 Patch0:		%{name}-for-linux-cmake.patch
@@ -195,7 +195,8 @@ well as the Universal Gadgets on iGoogle.
 This package includes the XULRunner modules.
 
 %prep
-%setup -q -n %{name}-for-linux
+#%setup -q -n %{name}-for-linux
+%setup -q -c
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
