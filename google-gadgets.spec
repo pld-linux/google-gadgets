@@ -12,11 +12,12 @@
 Summary:	Google Gadgets for Linux
 Name:		google-gadgets
 Version:	0.10.5
-Release:	0.%{rev}.%{rel}
+Release:	1
 License:	Apache License v2.0
 Group:		X11/Applications
-Source0:	%{name}-for-linux-%{version}-%{rev}.tar.bz2
-# Source0-md5:	885388f7f00e6ef8777194e2db4213bc
+#Source0:	%{name}-for-linux-%{version}-%{rev}.tar.bz2
+Source0:	http://google-gadgets-for-linux.googlecode.com/files/%{name}-for-linux-%{version}.tar.bz2
+# Source0-md5:	fdad6bd761b6c603e457b5d0d92ec2f9
 Source1:	%{name}-for-linux-gtk.desktop
 Source2:	%{name}-for-linux-qt.desktop
 Patch0:		%{name}-for-linux-cmake.patch
@@ -195,8 +196,7 @@ well as the Universal Gadgets on iGoogle.
 This package includes the XULRunner modules.
 
 %prep
-#%setup -q -n %{name}-for-linux
-%setup -q -c
+%setup -q -n %{name}-for-linux-%{version}
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
