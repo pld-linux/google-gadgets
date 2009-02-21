@@ -5,14 +5,13 @@
 %bcond_without	gadgets	# without gadgets
 
 %define 	rev	r1084
-%define 	rel	1
 
 # use this to get latest rev:
 # svn export http://google-gadgets-for-linux.googlecode.com/svn/trunk/ google-gadgets-for-linux
 Summary:	Google Gadgets for Linux
 Name:		google-gadgets
 Version:	0.10.5
-Release:	1
+Release:	2
 License:	Apache License v2.0
 Group:		X11/Applications
 #Source0:	%{name}-for-linux-%{version}-%{rev}.tar.bz2
