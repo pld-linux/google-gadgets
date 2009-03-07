@@ -23,6 +23,7 @@ Patch0:		%{name}-for-linux-cmake.patch
 Patch1:		%{name}-for-linux-link_with_qtnetwork.patch
 Patch2:		%{name}-for-linux-js.patch
 URL:		http://code.google.com/p/google-gadgets-for-linux/
+BuildRequires:	NetworkManager-devel >= 0.6.5
 %if %{with qt}
 BuildRequires:	QtCore-devel >= 4.4.3
 BuildRequires:	QtNetwork-devel >= 4.4.3
@@ -36,8 +37,6 @@ BuildRequires:	cairo-devel >= 1.2.0
 BuildRequires:	gtk+2-devel >= 2:2.10.0
 BuildRequires:	startup-notification-devel
 %endif
-BuildRequires:	NetworkManager-devel >= 0.6.5
-#BuildRequires:	cmake >= 2.6.1-2
 BuildRequires:	curl-devel >= 7.18.2
 BuildRequires:	dbus-devel >= 1.0.2
 BuildRequires:	flex
@@ -47,6 +46,7 @@ BuildRequires:	librsvg-devel
 BuildRequires:	libtool >= 2:1.5.22
 BuildRequires:	libxml2-devel >= 1:2.4.0
 BuildRequires:	pkgconfig
+BuildRequires:	qt4-build
 BuildRequires:	xulrunner-devel >= 1.8
 BuildRequires:	zip
 BuildRequires:	zlib-devel >= 1.2.0
