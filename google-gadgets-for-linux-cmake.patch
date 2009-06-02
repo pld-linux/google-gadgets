@@ -9,17 +9,6 @@
            ${EMBED_INCDIR}/xpconnect
            ${EMBED_INCDIR}/widget
            ${EMBED_INCDIR}/gtkembedmoz
---- google-gadgets-for-linux-0.10.3/cmake/PkgConfigEx.cmake.orig	2008-11-19 00:02:51.000000000 +0100
-+++ google-gadgets-for-linux-0.10.3/cmake/PkgConfigEx.cmake	2008-11-19 00:03:07.000000000 +0100
-@@ -123,7 +123,7 @@
- ENDMACRO(APPLY_CONFIG _prefix)
- 
- MACRO(PKG_GET_VARIABLE _package _variable _value)
--  FIND_PROGRAM(PKGCONFIG pkg-config PATHS /usr/local/bin)
-+  FIND_PROGRAM(PKGCONFIG pkg-config PATHS /usr/bin)
-   EXECUTE_PROCESS(COMMAND ${PKGCONFIG}
-     "--variable=${_variable}"
-     "${_package}"
 --- google-gadgets-for-linux-0.10.3/cmake/Configure.cmake	2008-11-19 14:24:04.329062250 +0100
 +++ google-gadgets-for-linux-0.10.3/cmake/Configure.cmake-new	2008-11-19 14:24:38.115173750 +0100
 @@ -145,7 +145,7 @@
