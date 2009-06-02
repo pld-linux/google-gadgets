@@ -10,13 +10,13 @@
 # svn export http://google-gadgets-for-linux.googlecode.com/svn/trunk/ google-gadgets-for-linux
 Summary:	Google Gadgets for Linux
 Name:		google-gadgets
-Version:	0.10.5
-Release:	2
+Version:	0.11.0
+Release:	1
 License:	Apache License v2.0
 Group:		X11/Applications
 #Source0:	%{name}-for-linux-%{version}-%{rev}.tar.bz2
 Source0:	http://google-gadgets-for-linux.googlecode.com/files/%{name}-for-linux-%{version}.tar.bz2
-# Source0-md5:	fdad6bd761b6c603e457b5d0d92ec2f9
+# Source0-md5:	714b65738f4edeae361e2b164088c50d
 Source1:	%{name}-for-linux-gtk.desktop
 Source2:	%{name}-for-linux-qt.desktop
 Patch0:		%{name}-for-linux-cmake.patch
