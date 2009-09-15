@@ -10,13 +10,13 @@
 # svn export http://google-gadgets-for-linux.googlecode.com/svn/trunk/ google-gadgets-for-linux
 Summary:	Google Gadgets for Linux
 Name:		google-gadgets
-Version:	0.11.0
+Version:	0.11.1
 Release:	1
 License:	Apache License v2.0
 Group:		X11/Applications
 #Source0:	%{name}-for-linux-%{version}-%{rev}.tar.bz2
 Source0:	http://google-gadgets-for-linux.googlecode.com/files/%{name}-for-linux-%{version}.tar.bz2
-# Source0-md5:	714b65738f4edeae361e2b164088c50d
+# Source0-md5:	62fec129694e83d0de481667e3c785d8
 Source1:	%{name}-for-linux-gtk.desktop
 Source2:	%{name}-for-linux-qt.desktop
 Patch0:		%{name}-for-linux-cmake.patch
@@ -256,6 +256,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/google-gadgets/modules/google-gadget-manager.so
 %attr(755,root,root) %{_libdir}/google-gadgets/modules/libxml2-xml-parser.so
 %attr(755,root,root) %{_libdir}/google-gadgets/modules/linux-system-framework.so
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/html-flash-element.so
 %dir %{_datadir}/google-gadgets
 %{_datadir}/google-gadgets/*.gg
 %{_datadir}/mime/packages/google-gadgets.xml
