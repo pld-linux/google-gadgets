@@ -277,6 +277,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libggadget-npapi-1.0.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libggadget-xdg-1.0.so.0
 %attr(755,root,root) %{_libdir}/libggadget-xdg-1.0.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libggadget-webkitjs-1.0.so.0
+%attr(755,root,root) %{_libdir}/libggadget-webkitjs-1.0.so.*.*.*
 
 %files -n libggadget-devel
 %defattr(644,root,root,755)
@@ -299,6 +301,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libggadget-js-1.0*.so
 %{_libdir}/libggadget-xdg-1.0*.so
 %{_libdir}/libggadget-npapi-1.0*.so
+%{_libdir}/libggadget-webkitjs-1.0*.so
 %if 0
 %{_libdir}/libggadget-1.0*.la
 %{_libdir}/libggadget-dbus-1.0*.la
