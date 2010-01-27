@@ -10,13 +10,13 @@
 # svn export http://google-gadgets-for-linux.googlecode.com/svn/trunk/ google-gadgets-for-linux
 Summary:	Google Gadgets for Linux
 Name:		google-gadgets
-Version:	0.11.1
+Version:	0.11.2
 Release:	1
 License:	Apache License v2.0
 Group:		X11/Applications
 #Source0:	%{name}-for-linux-%{version}-%{rev}.tar.bz2
 Source0:	http://google-gadgets-for-linux.googlecode.com/files/%{name}-for-linux-%{version}.tar.bz2
-# Source0-md5:	62fec129694e83d0de481667e3c785d8
+# Source0-md5:	279305553bcbf74f3e3615f6abc36a5e
 Source1:	%{name}-for-linux-gtk.desktop
 Source2:	%{name}-for-linux-qt.desktop
 Patch0:		%{name}-for-linux-cmake.patch
@@ -257,6 +257,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/google-gadgets/modules/libxml2-xml-parser.so
 %attr(755,root,root) %{_libdir}/google-gadgets/modules/linux-system-framework.so
 %attr(755,root,root) %{_libdir}/google-gadgets/modules/html-flash-element.so
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/soup-xml-http-request.so
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/webkit-script-runtime.so
 %dir %{_datadir}/google-gadgets
 %{_datadir}/google-gadgets/*.gg
 %{_datadir}/mime/packages/google-gadgets.xml
@@ -342,6 +344,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/google-gadgets/modules/gtk-edit-element.so
 %attr(755,root,root) %{_libdir}/google-gadgets/modules/gtk-flash-element.so
 %attr(755,root,root) %{_libdir}/google-gadgets/modules/gtk-system-framework.so
+%attr(755,root,root) %{_libdir}/google-gadgets/modules/gtkwebkit-browser-element.so
 %{_desktopdir}/ggl-gtk.desktop
 %{_desktopdir}/ggl-designer.desktop
 
