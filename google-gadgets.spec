@@ -41,6 +41,7 @@ BuildRequires:	curl-devel >= 7.18.2
 BuildRequires:	dbus-devel >= 1.0.2
 BuildRequires:	flex
 BuildRequires:	gstreamer-plugins-base-devel >= 0.10.0
+BuildRequires:	gtk-webkit-devel
 BuildRequires:	libltdl-devel
 BuildRequires:	librsvg-devel
 BuildRequires:	libtool >= 2:1.5.22
