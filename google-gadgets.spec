@@ -11,7 +11,7 @@
 Summary:	Google Gadgets for Linux
 Name:		google-gadgets
 Version:	0.11.2
-Release:	7
+Release:	8
 License:	Apache License v2.0
 Group:		X11/Applications
 #Source0:	%{name}-for-linux-%{version}-%{rev}.tar.bz2
@@ -22,6 +22,10 @@ Source2:	%{name}-for-linux-qt.desktop
 Patch0:		%{name}-for-linux-cmake.patch
 Patch1:		%{name}-for-linux-link_with_qtnetwork.patch
 Patch2:		%{name}-for-linux-js.patch
+Patch3:		gcc-4.7.patch
+Patch4:		glib-2.32.patch
+Patch5:		nm09.patch
+Patch6:		nm-mobile-devtypes.patch
 URL:		http://code.google.com/p/google-gadgets-for-linux/
 BuildRequires:	NetworkManager-devel >= 0.6.5
 %if %{with qt}
@@ -48,7 +52,6 @@ BuildRequires:	libtool >= 2:1.5.22
 BuildRequires:	libxml2-devel >= 1:2.4.0
 BuildRequires:	pkgconfig
 BuildRequires:	qt4-build
-BuildRequires:	xulrunner-devel >= 1.8
 BuildRequires:	zip
 BuildRequires:	zlib-devel >= 1.2.0
 Requires:	libggadget = %{version}-%{release}
@@ -139,7 +142,6 @@ Summary:	GTK+ Version of Google Gadgets
 Group:		X11/Applications
 Requires:	google-gadgets = %{version}-%{release}
 Requires:	google-gadgets-gst = %{version}-%{release}
-Requires:	google-gadgets-xul = %{version}-%{release}
 Requires:	libggadget-gtk = %{version}-%{release}
 Obsoletes:	google-gadgets-for-linux-gtk
 
@@ -181,25 +183,15 @@ well as the Universal Gadgets on iGoogle.
 
 This package includes the GStreamer modules.
 
-%package xul
-Summary:	XULRunner modules for Google Gadgets
-Group:		X11/Applications
-Requires:	libggadget = %{version}-%{release}
-Requires:	xulrunner
-
-%description xul
-Google Gadgets for Linux provides a platform for running desktop
-gadgets under Linux, catering to the unique needs of Linux users. It's
-compatible with the gadgets written for Google Desktop for Windows as
-well as the Universal Gadgets on iGoogle.
-
-This package includes the XULRunner modules.
-
 %prep
 %setup -q -n %{name}-for-linux-%{version}
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
 
 %build
 install -d libltdl
@@ -213,7 +205,9 @@ install -d libltdl
 	--disable-static \
 	--disable-werror \
 	--with-oem-brand=pld-linux \
-	--with-browser-plugins-dir=%{_libdir}/browser-plugins
+	--with-browser-plugins-dir=%{_libdir}/browser-plugins \
+	--disable-gtkmoz-browser-element \
+	--disable-smjs-script-runtime
 
 %{__make}
 
@@ -221,7 +215,7 @@ install -d libltdl
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir}}
 
-%{__make} install \
+%{__make} -j1 install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 # desync with cmake/ac makefiles
@@ -366,9 +360,3 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/google-gadgets/modules/gst-audio-framework.so
 %attr(755,root,root) %{_libdir}/google-gadgets/modules/gst-video-element.so
-
-%files xul
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/google-gadgets/modules/smjs-script-runtime.so
-%attr(755,root,root) %{_libdir}/google-gadgets/modules/gtkmoz-browser-element.so
-%attr(755,root,root) %{_libdir}/google-gadgets/gtkmoz-browser-child
